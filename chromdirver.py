@@ -4,20 +4,18 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 
-def fetch_first_image_selenium(query):
-    # Automatically install the correct ChromeDriver version
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
-
+def fetch_first_image_selenium(driver, query):
     try:
         # Open Google Images
         driver.get("https://www.google.com/imghp")
 
         # Find the search box and enter the query
         search_box = driver.find_element(By.NAME, "q")
+        search_box.clear()  # Clear the search box in case of previous query
         search_box.send_keys(query)
         search_box.send_keys(Keys.RETURN)
 
@@ -50,11 +48,29 @@ def fetch_first_image_selenium(query):
             return "No valid image URL found."
     except Exception as e:
         return f"An error occurred: {e}"
-    finally:
-        # Close the browser
-        driver.quit()
 
-# Example usage
-query = "mountains"
-first_image_url = fetch_first_image_selenium(query)
-print("First image URL:", first_image_url)
+# Main script
+if __name__ == "__main__":
+    # Set up Chrome options for headless mode
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Enable headless mode
+    chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration
+    chrome_options.add_argument("--window-size=1920,1080")  # Set window size
+
+    # Install ChromeDriver only once
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+
+    try:
+        # List of queries to process
+        queries = ["mountains", "flowers", "beaches"]
+
+        # Fetch the first image for each query
+        for query in queries:
+            print(f"Fetching first image for query: '{query}'")
+            first_image_url = fetch_first_image_selenium(driver, query)
+            print("First image URL:", first_image_url)
+            print("-" * 50)  # Separator for readability
+    finally:
+        # Close the browser after all queries are processed
+        driver.quit()
