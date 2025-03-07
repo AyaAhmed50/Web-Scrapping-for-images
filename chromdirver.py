@@ -11,6 +11,7 @@ import time
 def fetch_first_image_selenium(driver, query):
     try:
         # Open Google Images
+
         driver.get("https://www.google.com/imghp")
 
         # Find the search box and enter the query

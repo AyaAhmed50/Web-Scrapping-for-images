@@ -5,7 +5,7 @@ def get_product_image(product_name):
     params = {
         "q": product_name,
         "tbm": "isch",
-        "api_key": "9e385857d2cb586625cd4df5f7a84bd03373a4497fe5f40c8a006d9bfdb6e069"  # Replace with your SerpApi key
+        "api_key": "your SerpApi key"  # Replace with your SerpApi key
     }
 
     search = GoogleSearch(params)
